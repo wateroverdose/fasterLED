@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" async src="./assets/scripts/colorpicker.js"></script>
+    <script async src="./assets/scripts/index.js"></script>
+    <link rel="stylesheet" href="./assets/stylesheets/fonts.css">
+    <link rel="stylesheet" href="./assets/stylesheets/styles.css">
+    <link rel="stylesheet" href="./assets/stylesheets/colorpicker.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="#">
+</head>
+
+<body>
+    <section id="ieBlocker">
+        <div>
+            <h1>sorry,</h1>
+            <h2>seems like you're using <a target="_blank"
+                    href="https://mashable.com/article/internet-explorer-vulnerability-just-stop-using-it">msie</a>,
+                please switch to a modern browser, such as Chromium or Firefox</h2>
+        </div>
+    </section>
+
+    <!--! i hate my life, making the color picker was a mistake -->
+    <section id="colorPickerWrapper">
+        <div id="colorPicker">
+            <div id="gradientsCenter">
+                <div id="gradientsWrapper">
+                    <div id="gradients">
+                        <div id="squareSelector"></div>
+                        <div id="whiteGradient" class="gradientPart"></div>
+                        <div id="blackGradient" class="gradientPart"></div>
+                        <div id="gradientColor" class="gradientPart"></div>
+                    </div>
+                    <div id="gradientsBorder"></div>
+                </div>
+            </div>
+        </div>
+        <section id="hInput" tabindex="-1">
+            <input class="ignoreInputAnim" tabindex="-1" type="range" name="hSlider" id="hSlider" min="0" max="360"
+                step="1" autocomplete="off">
+            <div>
+                <div>0</div>
+                <div>360</div>
+            </div>
+        </section>
+
+        <div>
+            <section>
+                <div>
+                    <label for="hNumber">h</label>
+                    <input type="number" id="hNumber" class="ignoreInputAnim" value="180" autocomplete="off">
+                </div>
+                <div>
+                    <label for="sInput">s</label>
+                    <input type="number" name="sInput" id="sInput" class="ignoreInputAnim" value="50"
+                        autocomplete="off">
+                </div>
+                <div>
+                    <label for="vInput">v/b</label>
+                    <input type="number" name="vInput" id="vInput" class="ignoreInputAnim" value="50"
+                        autocomplete="off">
+                </div>
+            </section>
+
+            <section>
+                <label for="hexInput">hex</label>
+                <input type="text" name="hexInput" id="hexInput" class="ignoreInputAnim" value="ff0000"
+                    autocomplete="off">
+            </section>
+
+            <section id="rgb">
+                <div>rgb(</div>
+                <div>
+                    <input type="text" id="rInput" class="rgbInput ignoreInputAnim" value="255" autocomplete="off">
+                </div>
+                <div>, </div>
+                <div>
+                    <input type="text" name="gInput" id="gInput" class="rgbInput ignoreInputAnim" value="50"
+                        autocomplete="off">
+                </div>
+                <div>, </div>
+                <div>
+                    <input type="text" name="bInput" id="bInput" class="rgbInput ignoreInputAnim" value="50"
+                        autocomplete="off">
+                </div>
+                <div>)</div>
+            </section>
+            <section>
+                <button id="submitColor" style="color: black;">submit color</button>
+                <span class="test">text</spanc>
+            </section>
+        </div>
+    </section>
+
+
+
+    <main>
+        <h1>FastLED code generator for Arduino</h1>
+        <section id="settings">
+            <div id="isRectangleWrapper">
+                <div>
+                    <div>
+                        <input type="checkbox" name="isRectangle" id="isRectangle" checked>
+                        <label for="isRectangle">rectangle? (length×height)</label>
+                    </div>
+                    <div id="currentShape"><b>current = rectangle (height×length)</b></div>
+                </div>
+            </div>
+        </section>
+        <section id="ledInput">
+            <section id="ledInputRectangle" class="ledInput">
+                <span class="inputHeader">height = </span>
+                <input class="ledNumberInput" min="1" max="64" type="number" name="ledNumber" class="ledNumber"
+                    id="ledNumberA" autocomplete="off">
+                <span class="inputHeader">length = </span>
+                <input class="ledNumberInput" min="1" max="64" type="number" name="ledNumber" class="ledNumber"
+                    id="ledNumberB" autocomplete="off">
+            </section>
+            <section id="ledInputNonRectangle" class="ledInput">
+                <span class="inputHeader">a = </span>
+                <input class="ledNumberInput" min="1" max="64" type="number" name="ledNumber" id="ledNumber"
+                    class="ledNumber" autocomplete="off">
+            </section>
+            <button type="submit" id="submitButton">generate!</button>
+        </section>
+        <section id="ledMatrixWrapper">
+            <section id="ledMatrix"></section>
+        </section>
+        <code>
+            <div id="copyCode">
+                <img src="./assets/images/x.svg" alt="minimize" id="copyCodeMinimize">
+                <div id="copyCodeBackground">
+                    <div id="copyCodeTextWrapper">
+                        <div id="copyCodeText">
+                            click anywhere to copy the code
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="codeFinalWrapper">
+                <div id="codeFinal"></div>
+            </div>
+        </code>
+    </main>
+
+    <script src="./assets/scripts/ieblocker.js"></script>
+</body>
+
+</html>
