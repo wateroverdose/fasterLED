@@ -1,35 +1,35 @@
 // ⚠ WARNING ⚠
 // THIS CODE WILL GIVE YOU BRAIN DAMAGE
 
-// WRITTEN BY orangeonfire (https://github.com/orangeonfire)
+// WRITTEN BY purplishflame (https://github.com/purplishflame)
 
-let hexInput = document.querySelector('#hexInput'),
-   hSlider = document.querySelector('#hSlider'),
-   rgbInput = document.querySelectorAll('.rgbInput'),
-   cursorX = 0,
-   cursorY = 0,
-   gradientsBorder = document.querySelector('#gradientsBorder'),
-   gradientColor = document.querySelector('#gradientColor'),
+let hex_input = document.querySelector('#hex_input'),
+   h_slider = document.querySelector('#h_slider'),
+   rgb_input = document.querySelectorAll('.rgb_input'),
+   cursor_x = 0,
+   cursor_y = 0,
+   gradients_border = document.querySelector('#gradients_border'),
+   gradient_color = document.querySelector('#gradient_color'),
    gradients = document.querySelector('#gradients'),
-   gradientsWrapper = document.querySelector('#gradientsWrapper'),
-   squareSelector = document.querySelector('#squareSelector'),
-   hInput = document.querySelector('#hInput'),
-   sInput = document.querySelector('#sInput'),
-   vInput = document.querySelector('#vInput'),
-   gradientRect = gradients.getBoundingClientRect(),
-   divider = gradientRect.width / 100,
-   gradientRectX = cursorX - gradientRect.left,
-   gradientRectY = cursorY - gradientRect.top,
-   gradientRectReverseY = cursorY - gradientRect.bottom,
-   bottomChecker = gradientRectReverseY / divider,
-   leftChecker = gradientRectX / divider,
-   isMouseOverGradients = false,
-   actualS = 50,
-   actualV = 50;
+   gradients_wrapper = document.querySelector('#gradients_wrapper'),
+   square_selector = document.querySelector('#square_selector'),
+   h_input = document.querySelector('#h_input'),
+   s_input = document.querySelector('#s_input'),
+   v_input = document.querySelector('#v_input'),
+   gradient_rect = gradients.getBoundingClientRect(),
+   gradient_rect_divisor = gradient_rect.width / 100,
+   gradient_rect_x = cursor_x - gradient_rect.left,
+   gradient_rect_y = cursor_y - gradient_rect.top,
+   gradient_rect_reverse_y = cursor_y - gradient_rect.bottom,
+   bottom_checker = gradient_rect_reverse_y / gradient_rect_divisor,
+   left_checker = gradient_rect_x / gradient_rect_divisor,
+   is_mouse_over_gradient = false,
+   actual_s = 50,
+   actual_v = 50;
 
 window.addEventListener('mousemove', (e) => {
-   cursorX = e.clientX;
-   cursorY = e.clientY
+   cursor_x = e.clientX;
+   cursor_y = e.clientY;
 })
 
 // source: https://www.geeksforgeeks.org/javascript-throttling
@@ -46,6 +46,7 @@ const throttle = (func, delay) => {
       }
    }
 }
+
 
 // source: https://ehsangazar.com/optimizing-javascript-event-listeners-for-performance-e28406ad406c
 function debounce(func, wait, immediate) {
@@ -64,12 +65,22 @@ function debounce(func, wait, immediate) {
    };
 };
 
-function convRem(rem) {
-   return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-}
-
-function convPx(px) {
-   return px / parseFloat(getComputedStyle(document.documentElement).fontSize);
+// TODO actually make this function good ~ 11/06/22
+function rem_px_conv(value, type, is_postfix_present) {
+   if (value === undefined || type === undefined || is_postfix_present === undefined) return;
+   if (type === true) {
+      if (is_postfix_present === true) {
+         return (value.replace('px', '') / parseFloat(getComputedStyle(document.documentElement).fontSize))/* + 'rem'*/;
+      } else {
+         return value / parseFloat(getComputedStyle(document.documentElement).fontSize)/* + 'rem'*/;
+      }
+   } else {
+      if (is_postfix_present === true) {
+         return (value.replace('rem', '') * parseFloat(getComputedStyle(document.documentElement).fontSize))/* + 'px'*/;
+      } else {
+         return value * parseFloat(getComputedStyle(document.documentElement).fontSize)/* + 'px'*/;
+      }
+   }
 }
 
 function getProp(element, value) {
@@ -78,7 +89,7 @@ function getProp(element, value) {
 }
 
 //? source: https://stackoverflow.com/a/17243070/17747971
-function hsvToRgb(h, s, v) {
+function hsv_to_rgb(h, s, v) {
    let r, g, b, i, f, p, q, t;
    if (arguments.length === 1) {
       s = h.s, v = h.v, h = h.h;
@@ -109,14 +120,14 @@ function hsvToRgb(h, s, v) {
          break;
    }
    return {
-      r: Math.round(r * 255),
-      g: Math.round(g * 255),
-      b: Math.round(b * 255)
+      r: Math.round(r * 2.5),
+      g: Math.round(g * 2.5),
+      b: Math.round(b * 2.5)
    };
 }
 
 //? source: https://stackoverflow.com/a/17243070/17747971
-function rgbToHsv(r, g, b) {
+function rgb_to_hsv(r, g, b) {
    if (arguments.length === 1) {
       g = r.g, b = r.b, r = r.r;
    }
@@ -152,55 +163,94 @@ function rgbToHsv(r, g, b) {
    };
 }
 
-function rgbToHex(x) {
+function rgb_to_hex(x) {
    let hex = x.toString(16);
    if (hex.length === 1) {
       hex = `0${hex}`
    }
-   return hex
+   return hex;
 }
 
-function setSquareSelectorPosition() {
+// ? send null as the first argument to send singular values
+function hex_to_rgb(str, h, e, x) {
+   if (str === undefined) return;
+   arr = [];
+   if (str !== null) {
+      let str_arr = str.match(/.{0,2}/g);
+      h = str_arr[0];
+      e = str_arr[1];
+      x = str_arr[2];
+   }
+   return {
+      r: parseInt(h, 16),
+      g: parseInt(e, 16),
+      b: parseInt(x, 16)
+   }
+}
+
+function constrain(x, a, b) {
+   return Math.max(Math.min(x, b), a);
+}
+
+function set_square_selector_position() {
    //? update gradientrectx and make gradientreverseY \/
-   gradientRectX = cursorX - gradientRect.left;
-   gradientRectY = cursorY - gradientRect.top;
-   gradientRectReverseY = cursorY - gradientRect.bottom;
+   gradient_rect_x = cursor_x - gradient_rect.left;
+   gradient_rect_y = cursor_y - gradient_rect.top;
+   gradient_rect_reverse_y = cursor_y - gradient_rect.bottom;
    //? reverse the gradient y /\
-
-   //? update the top, bottom and left checkers \/
-   topChecker = gradientRectY / divider;
-   bottomChecker = gradientRectReverseY / divider;
-   leftChecker = gradientRectX / divider;
-
    //? use the left checker to make sure the selector doesnt overflow horizontally \/
-   if (gradientRectX / divider < 0) {
-      leftChecker = 0
-   } else if (gradientRectX / divider >= 100) {
-      leftChecker = 100
-   }
-
+   left_checker = constrain(gradient_rect_x / gradient_rect_divisor, 0, 100);
    //? use the bottom and top checkers to make sure the selector doesnt overflow vertically \/
-   if (gradientRectReverseY / divider > 0) {
-      bottomChecker = 0
-   } else if (gradientRectReverseY / divider <= -100) {
-      bottomChecker = -100
-   }
+   bottom_checker = constrain(gradient_rect_reverse_y / gradient_rect_divisor, -100, 0);
    //? top checker
-   if (gradientRectY / divider < 0) {
-      topChecker = 0
-   } else if (gradientRectY / divider >= 100) {
-      topChecker = 100;
-   }
-
-   updateColorValues()
+   top_checker = constrain(gradient_rect_y / gradient_rect_divisor, 0, 100);
+   //? change the selector's left based on the s input \/
+   square_selector.style.left = `${rem_px_conv((left_checker * gradient_rect_divisor - 1), true, false)}rem`;
+   //? now top
+   square_selector.style.top = `${rem_px_conv((top_checker * gradient_rect_divisor + 1), true, false)}rem`;
+   update_color_values();
 }
 
 
+// function update_color_picker_from_values() {
 
-hSlider.addEventListener('input', changeGradientBackgroundFromSlider);
+// }
+// for (let i = 0; i < color_value_inputs.length; i++) {
+//    color_value_inputs[i].addEventListener('input', () => {
+//       update_color_picker_from_values();
+//    });
+// }
 
-function changeGradientBackgroundFromSlider() {
-   hInput.value = hSlider.value;
+function contains_hex_nums(str) {
+   if (typeof(str) !== 'string') return; 
+   return str.match(/[a-f0-9]/gi).length;
+}
+
+function format_hex(str) {
+   val = str;
+   if (val.length > 6) {
+      val = val.slice(0, 6);
+   }
+   if (val.length !== 3 && val.length !== 6) return;
+   if (contains_hex_nums(val) === undefined || contains_hex_nums(val) !== val.length) return;
+   val = val.toLowerCase();
+   let arr = [];
+   if (val.length === 3) {
+      val = val.split('').map(a => a + a).join('');
+      return val;
+   }
+   arr = val.match(/.{1,2}/g);
+   console.log(arr)
+}
+
+hex_input.addEventListener('change', () => {
+   hex_input.value = format_hex(hex_input.value);
+});
+
+h_slider.addEventListener('input', change_gradient_based_on_slider);
+
+function change_gradient_based_on_slider() {
+   h_input.value = h_slider.value;
    //!
 
    //!
@@ -208,70 +258,83 @@ function changeGradientBackgroundFromSlider() {
    //!
 
    //! DOKONCZYC TO GUWNO BO NEI DZIALA :))))
-   gradientColor.style.background = `hsl(${hSlider.value}, 100%, 50%) none repeat scroll 0% 0%`;
-   let x = hsvToRgb(hSlider.value / 360, actualS / 100, actualV / 100),
-      out = `rgb(${x.r}, ${x.g}, ${x.b})`;
-   gradientsBorder.style.background = out;
+   gradient_color.style.background = `hsl(${h_slider.value}, 100%, 50%) none repeat scroll 0% 0%`;
+   let x = hsv_to_rgb(h_slider.value / 360, actual_s / 100, actual_v / 100),
+       out = `rgb(${x.r}, ${x.g}, ${x.b})`;
+   gradients_border.style.background = out;
 }
 
-function updateColorValues() {
+function update_color_values() {
    //? update the value of s and v inputs based on the checkers \/
-   actualS = leftChecker;
-   actualV = Math.abs(bottomChecker);
-   sInput.value = actualS.toFixed(2);
-   vInput.value = actualV.toFixed(2);
+   actual_s = left_checker;
+   actual_v = Math.abs(bottom_checker);
+   s_input.value = actual_s.toFixed(2);
+   v_input.value = actual_v.toFixed(2);
 
    //? reverse the vInput so it's not negative /\
 
-   //? change the selector's left based on the s input \/
-   squareSelector.style.left = `${convPx(leftChecker * divider - 1)}rem`
-   //? now top
-   squareSelector.style.top = `${convPx(topChecker * divider + 1)}rem`
 
-
-
-   let x = hsvToRgb(hSlider.value / 360, actualS / 100, actualV / 100),
+   let x = hsv_to_rgb(h_slider.value / 360, actual_s / 100, actual_v / 100),
       out = `rgb(${x.r}, ${x.g}, ${x.b})`;
-   gradientsBorder.style.background = out;
+   gradients_border.style.background = out;
 
    //? set rgb inputs
-   document.querySelector('#rInput').value = `${x.r}`;
-   document.querySelector('#gInput').value = `${x.g}`;
-   document.querySelector('#bInput').value = `${x.b}`;
+   document.querySelector('#r_input').value = `${x.r}`;
+   document.querySelector('#g_input').value = `${x.g}`;
+   document.querySelector('#b_input').value = `${x.b}`;
 
    //? set hex inputs from rgb
-   hexInput.value = `${rgbToHex(x.r)}${rgbToHex(x.g)}${rgbToHex(x.b)}`
+   hex_input.value = `${rgb_to_hex(x.r)}${rgb_to_hex(x.g)}${rgb_to_hex(x.b)}`;
 }
 
+function change_input_width(obj) {
+   if (obj.length >= 3) {
+      return '3ch';
+   } else if (obj.length === 2) {
+      return '2ch';
+   } else {
+      return '1ch';
+   }
+}
+
+function update_rgb_input_val(n) {
+   rgb_input[n].style.width = change_input_width(rgb_input[n].value);
+}
+
+for (let i = 0; i < rgb_input.length; i++) {
+   rgb_input[i].addEventListener('input', () => {
+      update_rgb_input_val(i);
+   });
+}
 
 //? the whole gradient mechanics
 gradients.addEventListener('mouseover', () => {
-   isMouseOverGradients = true
+   is_mouse_over_gradient = true;
 });
 
 gradients.addEventListener('mouseout', () => {
-   isMouseOverGradients = false
+   !is_mouse_over_gradient;
 });
 
-gradientsWrapper.addEventListener('click', setSquareSelectorPosition)
+gradients_wrapper.addEventListener('click', set_square_selector_position);
 
-gradientsWrapper.addEventListener('mousedown', () => {
-   gradientsWrapper.addEventListener('mousemove', setSquareSelectorPosition)
+gradients_wrapper.addEventListener('mousedown', () => {
+   gradients_wrapper.addEventListener('mousemove', set_square_selector_position)
 })
 
 document.body.addEventListener('mouseup', () => {
-   gradientsWrapper.removeEventListener('mousemove', setSquareSelectorPosition)
+   gradients_wrapper.removeEventListener('mousemove', set_square_selector_position)
 })
 
 
 
 //? update the clientX and clientY on resize
 window.addEventListener('resize', () => {
-   cursorX = document.body.getBoundingClientRect().width;
-   cursorY = document.body.getBoundingClientRect().height;
-   divider = gradientRect.width / 100;
-   gradientRect = gradients.getBoundingClientRect();
-   gradientRectX = cursorX - gradientRect.left;
-   gradientRectY = cursorY - gradientRect.top;
-   gradientRectReverseY = cursorY - gradientRect.bottom
-})
+   cursor_x = document.body.getBoundingClientRect().width;
+   cursor_y = document.body.getBoundingClientRect().height;
+   gradient_rect_divisor = gradient_rect.width / 100;
+   gradient_rect = gradients.getBoundingClientRect();
+   gradient_rect_x = cursor_x - gradient_rect.left;
+   gradient_rect_y = cursor_y - gradient_rect.top;
+   gradient_rect_reverse_y = cursor_y - gradient_rect.bottom;
+});

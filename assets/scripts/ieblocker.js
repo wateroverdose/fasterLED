@@ -1,10 +1,5 @@
-// ⚠ WARNING ⚠
-// THIS CODE WILL GIVE YOU BRAIN DAMAGE
-
-// WRITTEN BY orangeonfire (https://github.com/orangeonfire)
-
 if (window.navigator.userAgent.indexOf("Trident") > 0) {
-    document.getElementById('ieBlocker').style.display = 'flex';
+    document.getElementById('ie_blocker').style.display = 'block';
 } else {
-    document.getElementById('ieBlocker').style.display = 'none';
+    document.getElementById('ie_blocker').style.display = 'none';
 }
