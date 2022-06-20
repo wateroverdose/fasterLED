@@ -72,8 +72,12 @@ button {
 
 input {
    background: var(--offwhite_color);
-   color: var(--primary_color);
+   color: var(--secondary_color) !important;
    border-radius: var(--radius);
+}
+
+button {
+   color: var(--secondary_color);
 }
 
 *:focus {
@@ -227,12 +231,10 @@ h1 {
 
 .setting * {
    display: inline-block;
-   color: var(--secondary_color);
+   color: var(--primary_color);
 }
 
-input {
-   color: var(--primary_color) !important;
-}
+
 
 .extend_input {
    background: var(--offwhite_color);
@@ -476,7 +478,7 @@ input {
 }
 
 #colors_section input {
-   color: var(--secondary_color) !important;
+   color: var(--secondary_color);
 }
 
 #colors_section:hover {
@@ -577,7 +579,9 @@ input {
    z-index: 1002;
 }
 
+/* temp */
 #gradient_color {
+   background: #00ffff;
 }
 
 #gradients_border {
@@ -586,6 +590,8 @@ input {
    margin-top: calc(var(--selector-size) * 2 + (var(--selector-size) / 2));
    position: absolute;
    z-index: 1000;
+   /* temp */
+   background: #408080;
 }
 
 #leds {
