@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
-<!-- hi whats up -->
-
 <head>
-   <script defer src="./assets/scripts/colorpicker.js"></script>
-   <script defer src="./assets/scripts/index.js"></script>
-   <link rel="stylesheet" href="./assets/stylesheets/styles.css">
-   <link rel="stylesheet" href="./assets/stylesheets/fonts.css">
-   <link rel="stylesheet" href="./assets/stylesheets/ieblocker.css">
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="shortcut icon" href="#">
-   <title>fastled gen</title>
+   <script async src='./assets/scripts/func.js'></script>
+   <script defer src='./assets/scripts/colorpicker.js'></script>
+   <script defer src='./assets/scripts/index.js'></script>
+   <link rel='stylesheet' href='./assets/stylesheets/styles.css'>
+   <link rel='stylesheet' href='./assets/stylesheets/fonts.css'>
+   <link rel='stylesheet' href='./assets/stylesheets/ieblocker.css'>
+   <meta charset='UTF-8'>
+   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+   <link rel='shortcut icon' href='#'>
+   <title>fasterLED - get your FastLED configuration working quicker</title>
 </head>
 
 <body>
@@ -19,10 +18,10 @@
       <p>this website requires javascript</p>
       <p>check your adblocker's settings</p>
       <p>if you're on firefox, go to about:config and toggle javascript.enabled true</p>
-      <p>for other browsers, check out <a href="https://enable-javascript.com/">enable-javascript.com</a> </p>
+      <p>for other browsers, check out <a href='https://enable-javascript.com/'>enable-javascript.com</a> </p>
    </noscript>
 
-   <section id="ie_blocker">
+   <section id='ie_blocker'>
       <div>
          <h1>sorry,</h1>
          <h2>seems like you're using an outdated browser, please switch to a modern one, such as Chromium or Firefox
@@ -30,195 +29,237 @@
       </div>
    </section>
 
-   <section id="colors">
-      <div id="colors_center">
-         <div id="color_picker">
-            <div id="gradients_wrapper">
-               <div id="gradients">
-                  <div id="square_selector"></div>
-                  <div id="white_gradient" class="gradient_part"></div>
-                  <div id="black_gradient" class="gradient_part"></div>
-                  <div id="gradient_color" class="gradient_part"></div>
-               </div>
-               <div id="gradients_border"></div>
-            </div>
-         </div>
-
-         <div id="h_slider_wrapper" tabindex="_1">
-            <input tabindex="_1" type="range" name="h_slider" id="h_slider" class="no_outline" min="0" max="360"
-               step="1" autocomplete="off" value="180">
-            <div id="pleaseHelpHowDoINameThisHahaFunnyNumbersUnderHSldierQuestionmARK">
-               <div>0</div>
-               <div>360</div>
-            </div>
-         </div>
-
-         <div id="color_input">
-
-            <div class="color_input">
-               <label for="h_input">h</label>
-               <input type="number" id="h_input" class="color_number_input medium_input_width" autocomplete="off" value="180">
-            </div>
-            <div class="color_input">
-               <label for="s_input">s</label>
-               <input type="number" id="s_input" class="color_number_input medium_input_width" autocomplete="off" value="50.00">
-            </div>
-            <div class="color_input">
-               <label for="v_input">b/v</label>
-               <input type="number" id="v_input" class="color_number_input medium_input_width" autocomplete="off" value="50.00">
-            </div>
-
-
-            <div id="hex_color_input" class="color_input">
-               <label for="hex_input">hex</label>
-               <div id="hex_input_wrapper">
-                  <div id="hex_hash">#</div>
-                  <input type="text" id="hex_input" class="color_number_input medium_input_width" value="40bfbf" autocomplete="off">
+   <section id='colors_section'>
+         <div id='colors_center'>
+            <div id='color_picker'>
+               <div id='gradients_wrapper'>
+                  <div id='gradients'>
+                     <div id='selector'></div>
+                     <div id='white_gradient' class='gradient_part'></div>
+                     <div id='black_gradient' class='gradient_part'></div>
+                     <div id='gradient_color' class='gradient_part'></div>
+                  </div>
+                  <div id='gradients_border'></div>
                </div>
             </div>
 
+            <div id='h_slider_wrapper' tabindex='_1'>
+               <input tabindex='_1' type='range' name='h_slider' id='h_slider' class='no_outline' min='0' max='360'
+                  step='1' autocomplete='off' value='180'>
+               <div id='pleaseHelpHowDoINameThisHahaFunnyNumbersUnderHSldierQuestionmARK'>
+                  <div>0</div>
+                  <div>360</div>
+               </div>
+            </div>
 
-            <div class="color_input">
-               <div>rgb</div>
-               <div class="rgb_inputs">
-                  <div>(</div>
-                  <div>
-                     <input type="text" id="r_input" class="no_outline color_number_input rgb_input medium_input_width" value="64"
-                        autocomplete="off">
+            <div id='color_input'>
+
+               <div class='color_input'>
+                  <label>h</label>
+                  <div class='extend_input_wrapper'>
+                     <!-- expand dong -->
+                     <div class='extend_input extend_input_left'></div>
+                     <input type='number' class='hsv_input color_number_input medium_input_width extended_input'
+                        autocomplete='off' value='180'>
                   </div>
-                  <div>, </div>
-                  <div>
-                     <input type="text" id="g_input" class="no_outline color_number_input rgb_input medium_input_width" value="191"
-                        autocomplete="off">
+               </div>
+               <div class='color_input'>
+                  <label>s</label>
+                  <div class='extend_input_wrapper'>
+                     <div class='extend_input extend_input_left'></div>
+                     <input type='number'class='hsv_input color_number_input medium_input_width extended_input'
+                        autocomplete='off' value='50,00'>
                   </div>
-                  <div>, </div>
-                  <div>
-                     <input type="text" id="b_input" class="no_outline color_number_input rgb_input medium_input_width" value="191"
-                        autocomplete="off">
+               </div>
+               <div class='color_input'>
+                  <label>v</label>
+                  <div class='extend_input_wrapper'>
+                     <div class='extend_input extend_input_left'></div>
+                     <input type='number'class='hsv_input color_number_input medium_input_width extended_input'
+                        autocomplete='off' value='50,00'>
                   </div>
-                  <div>)</div>
+               </div>
+               <div id='hex_color_input' class='color_input'>
+                  <label for='hex_input'>hex</label>
+                  <div id='hex_input_wrapper'>
+                     <div id='hex_hash'>#</div>
+                     <input type='text' id='hex_input' class='color_number_input medium_input_width' value='40bfbf'
+                        autocomplete='off'>
+                  </div>
+               </div>
+               <div class='color_input'>
+                  <div>rgb</div>
+                  <div id='rgb_inputs'>
+                     <div id='rgb_parenthesis_opening'>(</div>
+                     <div>
+                        <input type='text' id='r_input'
+                           class='no_outline color_number_input rgb_input medium_input_width' value='64'
+                           autocomplete='off'>
+                     </div>
+                     <div>, </div>
+                     <div>
+                        <input type='text' id='g_input'
+                           class='no_outline color_number_input rgb_input medium_input_width' value='191'
+                           autocomplete='off'>
+                     </div>
+                     <div>, </div>
+                     <div>
+                        <input type='text' id='b_input'
+                           class='no_outline color_number_input rgb_input medium_input_width' value='191'
+                           autocomplete='off'>
+                     </div>
+                     <div id='rgb_parenthesis_closing'>)</div>
+                  </div>
+               </div>
+            </div>
+
+            <button id='change_all_colors' class='cool_pad'>submit color AND CHANGE ALL</button>
+            <div id='go_random_wrapper'>
+               <button id='go_random' class='cool_pad'>
+                  <div id='go_random_text'>go RANDOM [WIP]</div>
+               </button>
+               <div id='go_random_checkbox_wrapper'>
+                  <input type='checkbox' id='go_random_checkbox'>
+                  <label for='go_random_checkbox' id='go_random_checkbox_label'>fill the whole canvas</label>
                </div>
             </div>
          </div>
-
-         <button id="submit_color" class="cool_pad">submit color</button>
-         <button id="change_all_colors" class="cool_pad">submit color AND CHANGE ALL</button>
-         <div id="go_random_wrapper">
-            <button id="go_random" class="cool_pad">
-               <div id="go_random_text">go RANDOM [WIP]</div>
-            </button>
-            <div id="go_random_checkbox_wrapper">
-               <input type="checkbox" name="go_random" id="go_random_checkbox">
-               <label for="go_random_checkbox" id="go_random_checkbox_label">fill the whole canvas</label>
-            </div>
+         <div id="arrow">
+            <div id="arrow_icon"></div>
          </div>
-         <div>
-            <div>selected led: </div>
-            <div id="current_box"></div>
-         </div>
-      </div>
    </section>
 
 
 
    <main>
-      <h1>fastled gen</h1>
+      <div id='title_wrapper'>
+         <div id='title'><h1>fasterLED</h1> <h5>by <a href='https://github.com/wateroverdose'>wateroverdose</a></h5></div>
+      </div>
       <h3>warning: all the magic is done on your computer, which means that the website may freeze for a second or two
          on slower machines</h3>
-      <div id="top">
-         <ul id="settings_p1" class="settings_page">
-            <li class="setting custom_radio" id="layout_type_selection">
-               <h4>LED layout type</h4>
-               <input type="radio" name="layout_type" class="layout_type no_outline" value="strip" autocomplete="off"
-                  id="layout_type_strip" checked>
-               <label for="layout_type_strip">strip</label>
-               <input type="radio" name="layout_type" class="layout_type no_outline" value="matrix" autocomplete="off"
-                  id="layout_type_matrix">
-               <label for="layout_type_matrix">matrix</label>
-               <input type="radio" name="layout_type" class="layout_type no_outline" value="custom" autocomplete="off"
-                  id="layout_type_custom">
-               <label for="layout_type_custom">custom</label>
-            </li>
-            <li class="setting">
-               <input type="checkbox" id="disable_limits" class="change_color_button no_outline">
-               <label for="disable_limits"> ignore input limits (not recommended) [WIP]</label>
-            </li>
-            <li class="setting">
-               <input type="checkbox" id="quick_hex_mode" class="change_color_button no_outline">
-               <label for="quick_hex_mode"> quick hex mode (click on led and enter hex value e.g. '<div id="ff0">#ff0
-                  </div>') [WIP]</label>
-            </li>
-         </ul>
-         <ul id="settings_p2" class="settings_page">
-            <li class="setting" id="data_pin_selection">
-               <label for="data_pin">Arduino data pin</label>
-               <input type="number" name="arduino_selection" class="no_outline" value="2" autocomplete="off"
-                  id="data_pin">
-            </li>
-            <li class="setting" id="brightness_selection">
-               <label for="brightness_level">brightness (1-100)</label>   
-               <input type="range" name="brightness_selection" id="brightness_level_slider" class="no_outline" step="1" min="1" max="100">
-               <input type="number" name="brightness_selection" id="brightness_level" value="255">
-            </li>
-            </li>
-         </ul>
-      </div>
-
-      <section id="led_input_box">
-         <div id="numbers">
-            <div id="led_input_rectangle" class="led_input">
-               <div>
-                  <span class="input_header">height = </span>
-                  <input type="number" class="led_number_input medium_input_width" min="1" max="64" autocomplete="off" id="led_number_A">
-               </div>
-               <div>
-                  <span class="input_header">length = </span>
-                  <input type="number" class="led_number_input medium_input_width" min="1" max="64" autocomplete="off" id="led_number_B">
-               </div>
+      <h3 class='warning' id='current_warning'>according to the <a href='https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf'>Microchip ATMega328P datasheet</a> (28.1 Absolute Maximum Ratings), stress beyond 40mA on one I/O pin may cause permament damage to the microcontroller. make sure to read the datasheet for used microcontroller and use an external power supply for the LEDs. i am not responsible for any kind of damage that may happen</h3>
+      <div id='top'>
+         <div id='settings_wrapper'>
+            <div id='settings'>
+               <ul class='settings_page'>
+                  <li class='setting custom_radio' id='layout_type_selection'>
+                     <h4>LED layout type</h4>
+                     <input type='radio' class='layout_type no_outline' value='strip'
+                        autocomplete='off' id='layout_type_strip' checked>
+                     <label for='layout_type_strip'>strip</label>
+                     <input type='radio' class='layout_type no_outline' value='matrix'
+                        autocomplete='off' id='layout_type_matrix'>
+                     <label for='layout_type_matrix'>matrix</label>
+                     <input type='radio' class='layout_type no_outline' value='custom'
+                        autocomplete='off' id='layout_type_custom'>
+                     <label for='layout_type_custom'>custom</label>
+                  </li>
+                  <li class='setting' id='disable_limits_wrapper'>
+                     <input type='checkbox' id='disable_limits' class='change_color_button no_outline'>
+                     <label for='disable_limits'> ignore input limits (not recommended) [WIP]</label>
+                  </li>
+               </ul>
+               <ul class='settings_page'>
+                  <li class='setting' id='data_pin_selection'>
+                     <label for='data_pin'>Arduino data pin</label>
+                     <div class='extend_input_wrapper' id='data_pin_input_wrapper'>
+                        <div class='extend_input extend_input_left'></div>
+                        <input type='number' class='medium_input_width extended_input'
+                           value='2' autocomplete='off' id='data_pin'>
+                     </div>
+                  </li>
+                  <li class="setting center" id="chipset_selection">
+                     <label for="led_chipset">LED chipset</label>
+                     <select id="led_chipset">
+                        <option value="apa102/dotstar">apa102/dotstar</option>
+                        <option value="ws2811">ws2812</option>
+                        <option value="ws2812b/neopixel">ws2812b/neopixel</option>
+                        <option value="tm1809/tm1812">tm1809/tm1812</option>
+                        <option value="tm1803">tm1803</option>
+                        <option value="tm1804">tm1804</option>
+                        <option value="ws2801">ws2801</option>
+                        <option value="ucs1903">ucs1903</option>
+                        <option value="lpd8806">lpd8806</option>
+                        <option value="p9813">p9813</option>
+                        <option value="sm16716">sm16716</option>
+                     </select>
+                     <a href="https://github.com/FastLED/FastLED/wiki/Chipset-reference#upcoming">chipset reference</a>
+                  </li>
+                  <li class='setting' id='brightness_selection'>
+                     <label for='brightness_level'>brightness (1 - 255)</label>
+                     <div class='center'>
+                        <input type='range' id='brightness_level_slider' class='no_outline'
+                           step='1' min='1' max='255' value='255' autocomplete='off'>
+                        <div class='extend_input_wrapper'>
+                           <div class='extend_input extend_input_left'></div>
+                           <input class='extended_input' type='number' id='brightness_level'
+                              value='100' autocomplete='off'>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
             </div>
-            <div id="led_input_non_rectangle" class="ledInput">
+            <div id='next_to_settings'>
+               <label class='toggle_switch'>
+                  <input type='checkbox'>
+                  <div class='toggle_switch_inner'></div>
+               </label>
+            </div>
+
+         </div>
+      </div>
+      <section id='led_input_box'>
+         <div id='numbers'>
+            <div id='led_input_rectangle' class='led_input'>
                <div>
-                  <span class="input_header">size = </span>
-                  <input type="number" class="led_number_input medium_input_width" id="led_number" min="1" max="64" autocomplete="off">
+                  <span class='input_header'>height = </span>
+                  <input type='number' class='led_number_input medium_input_width' min='1' max='64' autocomplete='off'
+                     id='led_number_a'>
+               </div>
+               <div>
+                  <span class='input_header'>length = </span>
+                  <input type='number' class='led_number_input medium_input_width' min='1' max='64' autocomplete='off'
+                     id='led_number_b'>
                </div>
             </div>
          </div>
-         <button id="submit_button" type="submit">do the magic, wizard</button>
+         <button id='submit_button' type='submit'>do the magic, wizard</button>
       </section>
 
-      <div id="testWrapper">
-         <section id="led_matrix_wrapper">
-            <div id="led_matrix"></div>
-         </section>
-      </div>
+      <section id='leds'>
+         <button id='regen_code'>regenerate code</button>
+         <div id='led_container_wrapper' class='scroll'>
+            <div id='led_container'></div>
+         </div>
+      </section>
 
       <code>
-         <div id="copy_code">
-            <img src="./assets/images/x.svg" alt="x">
-            <div id="copy_code_background">
-               <div id="copy_code_text_wrapper">
-                  <div id="copy_code_text">
+         <div id='copy_code'>
+            <img src='./assets/images/x.svg' alt='x' class='hide'>
+            <div id='copy_code_background' class='hide'>
+               <div id='copy_code_text_wrapper' class='hide'>
+                  <div id='copy_code_text' class='hide'>
                      click anywhere to copy the code 💜
                   </div>
                </div>
             </div>
+            <div id='code_final_wrapper'>
+               <textarea id='code_final'></textarea>
+            </div>
          </div>
-         <div id="code_final_wrapper">
-            <div id="code_final"></div>
-         </div>
+
       </code>
 
       <footer>
-         <a href="#" class="link"></a>
-         <a href="#" class="link"></a>
-         <a href="#" class="link"></a>
+         <a href='#' class='link'></a>
+         <a href='#' class='link'></a>
+         <a href='#' class='link'></a>
       </footer>
-
    </main>
 
-   <!-- made by me (github/purplishflame) 💜 -->
+   <!-- made by me (github/wateroverdose) 💜 -->
 
-   <script src="./assets/scripts/ieblocker.js"></script>
+   <script src='./assets/scripts/ieblocker.js'></script>
 </body>
 
 </html>
