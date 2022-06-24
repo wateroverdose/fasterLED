@@ -8,4 +8,4 @@ this tool is still in development.
 i am currently working on a better UI.
 
 project completed in about 65%.
-i will be more than happy to accept pr's with imporovements and bug fixes
+i will be more than happy to accept pr's with improvements and bug fixes
