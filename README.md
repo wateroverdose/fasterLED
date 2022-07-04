@@ -1,7 +1,7 @@
 # fasterLED
 quickly generate code for the FastLED Arduino library
 
-even though the code generation is working, some features such as saving settings to cookies and json.
+even though the code generation is working, some features such as saving settings to cookies (i got JSON working :3).
 app tested on firefox nightly and chromium.
 
 this tool is still in development.
