@@ -38,7 +38,7 @@ function hsv_to_rgb(h, s, v) {
    let r, g, b, i, f, p, q, t;
    if (arguments.length === 1) {
       s = h.s, v = h.v, h = h.h;
-   };
+   }
    i = Math.floor(h * 6);
    f = h * 6 - i;
    p = v * (1 - s);
@@ -63,19 +63,19 @@ function hsv_to_rgb(h, s, v) {
       case 5:
          r = v, g = p, b = q;
          break;
-   };
+   }
    return {
       r: Math.round(r * 255),
       g: Math.round(g * 255),
       b: Math.round(b * 255)
-   };
-};
+   }
+}
 
 //? source: https://stackoverflow.com/a/17243070/17747971
 function rgb_to_hsv(r, g, b) {
    if (arguments.length === 1) {
       g = r.g, b = r.b, r = r.r;
-   };
+   }
 
    let max = Math.max(r, g, b),
       min = Math.min(r, g, b),
@@ -100,14 +100,14 @@ function rgb_to_hsv(r, g, b) {
          h = (r - g) + d * 4;
          h /= 6 * d;
          break;
-   };
+   }
 
    return {
       h: h * 360,
       s: s * 100,
       v: v * 100
-   };
-};
+   }
+}
 
 function rgb_to_hex(x) {
    let hex = x.toString(16);
@@ -115,63 +115,69 @@ function rgb_to_hex(x) {
       hex = `0${hex}`;
    }
    return hex;
-};
+}
 
-// ? send null as the first argument to send singular values
 function hex_to_rgb(str, h, e, x) {
+   // ? send null as the first argument to send singular values
    if (str === undefined) return;
    if (str !== null) {
       let str_arr = str.match(/.{0,2}/g);
       h = str_arr[0];
       e = str_arr[1];
       x = str_arr[2];
-   };
+   }
    return {
       r: parseInt(h, 16),
       g: parseInt(e, 16),
       b: parseInt(x, 16)
-   };
-};
+   }
+}
 
 function constrain(num, min, max) {
    return Math.max(Math.min(num, max), min);
-};
+}
 
-let bottom_setter = gradient_rect_reverse_y / gradient_rect_divisor, top_setter;
-function selector_pos() {
-   //? update gradientrectx and make gradientreverseY \/
-   // ? i have absolutely no clue why this works, but if anything breaks, it's because of the rem_px_conv's below
+let bottom_setter, top_setter;
+function selector_pos(update) {
    gradient_rect_x = cursor_x - gradient_rect.left;
    gradient_rect_y = cursor_y - gradient_rect.top;
    gradient_rect_reverse_y = cursor_y - gradient_rect.bottom;
    gradient_rect = gradients.getBoundingClientRect();
-   //? reverse the gradient y /\
-   //? use the left checker to make sure the selector doesnt overflow horizontally \/
+
    left_setter = constrain(gradient_rect_x / gradient_rect_divisor, 0, 100);
-   //? use the bottom and top checkers to make sure the selector doesnt overflow vertically \/
    bottom_setter = constrain(gradient_rect_reverse_y / gradient_rect_divisor, -100, 0);
-   //? top checker
    top_setter = constrain(gradient_rect_y / gradient_rect_divisor, 0, 100);
-   //? change the selector's left based on the s input \/
+   
    selector.style.left = `${rem_px_conv((left_setter * gradient_rect_divisor), true, false)}rem`;
-   //? now top
    selector.style.top = `${rem_px_conv((top_setter * gradient_rect_divisor), true, false)}rem`;
+
+   actual_s = left_setter;
+   actual_v = Math.abs(bottom_setter);
+
+   if (update) update_color_values();
+}
+selector_pos(true);
+
+function set_selector_pos(x, y) {
+   left_setter = constrain(x, 0, 100);
+   bottom_setter = constrain(-100 + y, -100, 0);
+   top_setter = constrain(y, 0, 100);
+   selector.style.left = `${rem_px_conv(x * gradient_rect_divisor, true, false)}rem`;
+   selector.style.top = `${rem_px_conv(y * gradient_rect_divisor, true, false)}rem`;
+   actual_s = left_setter;
+   actual_v = Math.abs(bottom_setter);
    update_color_values();
-};
-selector_pos();
+}
 
 h_slider.addEventListener('input', () => {
    update_color_values();
 });
 
 function update_color_values() {
-   //? update the value of s and v inputs based on the checkers \/
-   actual_s = left_setter;
-   actual_v = Math.abs(bottom_setter);
-   hsv_input[1].value = left_setter.toFixed(2);
-   hsv_input[2].value = actual_v.toFixed(2);
+   hsv_input[1].value = Math.round(actual_s);
+   hsv_input[2].value = Math.round(actual_v);
 
-   let cp_val = get_current_cp_val();
+   const cp_val = get_current_cp_val();
 
    gradients_border.style.background = cp_val.out;
 
@@ -180,113 +186,99 @@ function update_color_values() {
    rgb_input[1].value = `${cp_val.x.g}`;
    rgb_input[2].value = `${cp_val.x.b}`;
    for (let n = 0; n < rgb_input.length; n++) {
-      rgb_input[n].style.width = change_input_width(rgb_input[n].value, 3);
-   };
+      rgb_input[n].style.width = `${get_input_width(rgb_input[n].value, 3)}ch`;
+   }
 
    //? set hex inputs from rgb
-   hex_input.value = `${rgb_to_hex(cp_val.x.r)}${rgb_to_hex(cp_val.x.g)}${rgb_to_hex(cp_val.x.b)}`;
-};
+   hex_input.value = `#${rgb_to_hex(cp_val.x.r)}${rgb_to_hex(cp_val.x.g)}${rgb_to_hex(cp_val.x.b)}`;
+}
 
 function get_current_cp_val() {
-   let x = hsv_to_rgb(h_slider.value / 360, actual_s / 100, actual_v / 100),
-       out = `rgb(${x.r}, ${x.g}, ${x.b})`;
+   const x = hsv_to_rgb(h_slider.value / 360, actual_s / 100, actual_v / 100),
+         out = `rgb(${x.r}, ${x.g}, ${x.b})`;
    return {
       x,
       out
-   };
-};
-
-hex_input.addEventListener('change', () => {
-   hex_input.value = format_hex(hex_input.value);
-   const htr = hex_to_rgb(hex_input.value);
-   rgb_input[0].value = htr.r;
-   rgb_input[1].value = htr.g;
-   rgb_input[2].value = htr.b;
-   for (let n = 0; n < rgb_input.length; n++) {
-      rgb_input[n].style.width = change_input_width(rgb_input[n].value, 3);
    }
-   const rth = rgb_to_hsv(htr.r, htr.g, htr.b);
-   h_slider.value = rth.h;
-   hsv_input[0].value = rth.h;
-   hsv_input[1].value = rth.s;
-   hsv_input[2].value = rth.v;
-});
+}
 
-// function update_color_picker_from_values() {
+// hex_input.addEventListener('change', () => {
+//    let formatted;
+//    if (hex_input.value.length === 3) {
+//       formatted = hex_input.value.charAt(0) === '#' ? format_hex(hex_input.value.substring(1, 4)) : format_hex(hex_input.value);
+//    } else if (hex_input.value.length === 6) {
+//       formatted = hex_input.value.charAt(0) === '#' ? format_hex(hex_input.value.substring(1, 7)) : format_hex(hex_input.value);
+//    }
+//    console.log(formatted);
+//    if (formatted === undefined) {return;} else {
+//       hex_input.value = formatted;
+//       const htr = hex_to_rgb(formatted.substring(1, 7));
+//       rgb_input[0].value = htr.r;
+//       rgb_input[1].value = htr.g;
+//       rgb_input[2].value = htr.b;
+//       for (let n = 0; n < rgb_input.length; n++) {
+//          rgb_input[n].style.width = get_input_width(rgb_input[n].value, 3);
+//       }
+//       const rth = rgb_to_hsv(htr.r, htr.g, htr.b);
+//       h_slider.value = rth.h;
+//       actual_s = Math.round(rth.s);
+//       actual_v = Math.round(rth.v);
+//       set_selector_pos(actual_s, actual_v);
+//       hsv_input[0].value = Math.round(rth.h);
+//       hsv_input[1].value = actual_s;
+//       hsv_input[2].value = actual_v;
+//    }
+// });
 
-// }
-// for (let i = 0; i < color_value_inputs.length; i++) {
-//    color_value_inputs[i].addEventListener('input', () => {
-//       update_color_picker_from_values();
-//    });
-// }
+for (let n = 0; n < hsv_input.length; n++) {
+   hsv_input[n].addEventListener('change', () => {
+      change_gradient_based_on_slider();
+      h_slider.value = hsv_input[0].value;
+      set_selector_pos(hsv_input[2].value, hsv_input[1].value);
+   })
+}
 
 function contains_hex_nums(str) {
    if (typeof(str) !== 'string') return; 
    return str.match(/[a-f0-9]/gi).length;
-};
-
-function format_hex(str, arrayify) {
-   let val = str;
-   // console.log(`str: ${str}, val: ${val}`);
-   // console.log(`val.length > 6 is next`);
-   if (val.length > 6) {
-      // console.log(`val.length > 6 proceeded`);
-      val = val.slice(0, 6);
-      // console.log(`val sliced to 6 chars`);
-      // console.log(val);
-   };
-   if (val.length !== 3 && val.length !== 6) return;
-   if (contains_hex_nums(val) === undefined || contains_hex_nums(val) !== val.length) return;
-   val = val.toLowerCase();
-   // console.log(`val toLowerCase`);
-   let arr = [];
-   // console.log(`arr var created`);
-   // console.log(`val.length === 3 is next`);
-   if (val.length === 3) {
-      // console.log(`val.length === 3 proceeded`);
-      val = val.split('').map(a => a + a).join('');
-      // console.log(`val split and mapped`);
-      // console.log(val)
-   };
-   if (arrayify === true) {
-      arr = val.match(/.{1,2}/g);
-      // console.log(`arr = val.match(/.{1,2}/g)`);
-      // console.log(arr);
-      return arr;
-   } else return val;
 }
 
-hex_input.addEventListener('change', () => {
-   hex_input.value = format_hex(hex_input.value);
-});
+function format_hex(str, arrayify) {
+   let _str = str;
+   if (_str.length === 7 && _str.charAt(0) === '#') {
+      _str = _str.substring(1, 7);
+   } else if (_str.length === 4 && _str.charAt(0) === '#') {
+      _str = _str.substring(1, 4);
+   } else if (_str.length > 6) {
+      _str = _str.slice(0, 6);
+   }
+   if (_str.length !== 3 && _str.length !== 6) return;
+   if (contains_hex_nums(_str) !== _str.length || contains_hex_nums === null || contains_hex_nums(_str) === undefined) return;
+   _str = _str.toLowerCase();
+   console.log(_str)
+   let arr = [];
+   if (_str.length === 3) {
+      _str = _str.split('').map(a => a + a).join('');
+      console.log(_str)
+   }
+   if (arrayify) {
+      arr = _str.match(/.{1,2}/g);
+      return arr;
+   } else return `#${_str}`;
+}
 
 h_slider.addEventListener('input', change_gradient_based_on_slider);
 
 function change_gradient_based_on_slider() {
-   hsv_input[0].value = h_slider.value;
    gradient_color.style.background = `hsl(${h_slider.value}, 100%, 50%) none repeat scroll 0% 0%`;
-   gradients_border.style.background = get_current_cp_val();
-};
-
-function change_input_width(obj, max) {
-   if (max === undefined) max = String(obj).length;
-   for (let n = 1; n < max; n++) {
-      if (obj.length >= max) {
-         return `${max}ch`;
-      } else if (obj.length === max - n) {
-         return `${max - n}ch`;
-      } else {
-         return '1ch';
-      };
-   };
-};
+   gradients_border.style.background = get_current_cp_val().out;
+}
 
 for (let n = 0; n < rgb_input.length; n++) {
    rgb_input[n].addEventListener('input', () => {
-      rgb_input[n].style.width = change_input_width(rgb_input[n].value, 3);
+      rgb_input[n].style.width = `${get_input_width(rgb_input[n].value, 3)}ch`;
    });
-};
+}
 
 //? update gradients
 gradients_wrapper.addEventListener('click', selector_pos);
@@ -297,11 +289,15 @@ gradients_wrapper.addEventListener('mousedown', () => {
 
 gradients_wrapper.addEventListener('mouseup', () => {
    gradients_wrapper.removeEventListener('mousemove', eErxyQ);
+   gradients_wrapper.style.cursor = 'crosshair';
 });
 
 function eErxyQ() {
-   selector_pos();
-};
+   selector_pos(true);
+   if (get_style(gradients_wrapper, 'cursor') !== 'all-scroll') {
+      gradients_wrapper.style.cursor = 'all-scroll';
+   }
+}
 
 document.addEventListener('mouseup', () => {
    gradients_wrapper.removeEventListener('mousemove', eErxyQ);
@@ -315,3 +311,8 @@ window.addEventListener('resize', () => {
    gradient_rect_y = cursor_y - gradient_rect.top;
    gradient_rect_reverse_y = cursor_y - gradient_rect.bottom;
 });
+
+set_selector_pos(50, 50);
+for (let n = 0; n < rgb_input.length; n++) {
+   rgb_input[n].style.width = `${get_input_width(rgb_input[n].value, 3)}ch`;
+}
