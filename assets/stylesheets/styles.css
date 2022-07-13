@@ -1,25 +1,5 @@
-@media (min-width: 1080px) {
-   html {
-      font-size: 18px;
-   }
-}
-
-@media (max-width: 1080px) {
-   html {
-      font-size: 16px;
-   }
-}
-
-@media (max-width: 768px) {
-   html {
-      font-size: 14px;
-   }
-}
-
-@media (max-width: 400px) {
-   html {
-      font-size: 16px;
-   }
+html {
+   font-size: 18px;
 }
 
 html {
@@ -29,10 +9,10 @@ html {
    --offwhite_color: #e9e9ed;
    --code_color: rgb(150, 0, 255);
    --radius: .35rem;
-   --gradient_size: 10rem;
-   --selector_size: 1px;
+   --gradient_size: 180px;
+   --selector_size: 2px;
    --color_picker_padding: calc(var(--selector_size) * 2 + (var(--selector_size) / 2));
-   --brightness_level_slider_color: #fff;
+   --brightness_level_slider_color: rgb(255, 255, 255);
    --dropdown_width: 7rem;
 }
 
@@ -59,20 +39,17 @@ main {
    margin: auto;
 }
 
+main input {
+   color: var(--secondary_color);
+}
+
 input,
 button {
    font-size: .9rem;
 }
 
-input {
-   background: var(--offwhite_color);
-   color: var(--secondary_color) !important;
-}
-
-input:not([type='checkbox']):focus, button:focus, select:focus {
-   outline-style: solid;
-   outline-color: rgb(255, 0, 160);
-   outline-width: 2px;
+*:focus {
+   outline: 2px solid rgb(255, 0, 160);
 }
 
 input[type='text'], input[type='number'], option, select {
@@ -107,14 +84,10 @@ h1 {
 
 #h_slider_wrapper {
    margin-top: 1rem;
-   display: flex;
-   align-items: center;
-   flex-direction: column;
 }
 
 #h_slider {
    outline: none;
-   overflow: visible;
    appearance: none;
    -webkit-appearance: none;
    -moz-appearance: none;
@@ -151,7 +124,6 @@ h1 {
 
 #h_slider_wrapper > div {
    width: 12rem;
-   display: flex;
    flex-direction: row;
    justify-content: space-between;
    margin-top: .35rem;
@@ -165,31 +137,12 @@ h1 {
    margin-right: .15rem;
 }
 
-#top {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   justify-content: center;
-   width: 100%;
-}
-
-.settings_page:nth-of-type(1) {
-   border-radius: calc(var(--radius) * 2) calc(var(--radius) * 2) 0 0;
-   box-shadow: rgba(0, 0, 0, .8) .275rem .275rem 0 .001rem;
-}
-
-.settings_page:nth-of-type(2) {
-   border-radius: 0 0 calc(var(--radius) * 2) calc(var(--radius) * 2);
-   box-shadow: rgba(0, 0, 0, .8) .275rem .275rem 0 .001rem;
-}
-
 .settings_page {
    display: flex;
    flex-direction: row;
    align-items: center;
-   justify-content: center;
+   justify-content: space-evenly;
    padding: .4rem .5rem;
-   background: #ddd;
 }
 
 .setting label:not(.no_weight_label) {
@@ -226,38 +179,6 @@ h1 {
    color: var(--primary_color);
 }
 
-.extended_input {
-   padding-left: .35rem;
-}
-
-.change_color_button {
-   display: none;
-}
-
-#ff0 {
-   background: #ff0;
-   color: #000;
-   border-radius: .25rem;
-   margin: 0 .1rem;
-   padding: 0 .15rem;
-   font-family: monospace;
-}
-
-.extend_input_wrapper {
-   display: flex;
-   flex-direction: row;
-}
-
-.center {
-   display: flex;
-   justify-content: space-around;
-   align-items: center;
-}
-
-#brightness_level {
-   width: 5ch;
-}
-
 #brightness_level_slider {
    outline: none;
    overflow: visible;
@@ -265,7 +186,6 @@ h1 {
    -webkit-appearance: none;
    -moz-appearance: none;
    width: 100%;
-   margin-right: 4%;
    height: .4rem;
    border-radius: var(--radius);
    background: #fff;
@@ -299,7 +219,7 @@ h1 {
    background: var(--brightness_level_slider_color);
    border: 0px;
    height: .85rem;
-   width: 8px; /* looks better without size changing the width */
+   width: 8px;
    border-radius: .2rem;
 }
 
@@ -312,27 +232,8 @@ h1 {
    border-radius: .2rem;
 }
 
-/* webkit can suck my ass :)) */
-/* also, firefox, fix your dumb number spinner going out of bounds */
-
-#brush_icon_enable {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   width: 5rem;
-}
-
-#order_selection div {
-   display: flex;
-}
-
 #order_selection select {
    width: 4ch;
-}
-
-#rgb_order_label {
-   display: flex;
-   align-items: center;
 }
 
 #rgb_order_label > span {
@@ -343,23 +244,8 @@ h1 {
    width: 4rem;
 }
 
-#data_pin, #clock_pin {
-   width: 3ch;
-}
-
 #disable_limits_wrapper {
    width: 9rem;
-}
-
-#led_input_box {
-   display: flex;
-   flex-direction: row;
-   align-content: center;
-   justify-content: center;
-}
-
-#led_input_box > div {
-   display: flex;
 }
 
 #led_input_box > div > label {
@@ -391,8 +277,6 @@ h1 {
 #go_random {
    animation: rainbow 4.5s linear infinite forwards;
    background: linear-gradient(45deg, rgba(255, 0, 0, 1) 20%, rgba(0, 252, 255, 1) 46%, rgba(255, 0, 255, 1) 68%, rgba(255, 0, 0, 1) 87%);
-   display: flex;
-   align-items: center;
    background-size: 650%;
 }
 
@@ -420,19 +304,9 @@ h1 {
    padding-left: .2rem;
 }
 
-#rgb_inside_parenthesis {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   justify-content: center;
-}
-
-#rgb_inputs {
-   display: flex;
-}
-
 #rgb_inputs input {
    width: 2ch;
+   font-family: 'jetbrains mono', monospace;
 }
 
 .rgb_comma {
@@ -458,23 +332,19 @@ h1 {
 
 #colors_section {
    height: 100%;
-   display: flex;
    position: fixed;
    z-index: 420;
    width: 2rem;
    /* width: 16rem; */
-   justify-content: center;
-   align-items: center;
    transition: width .4s cubic-bezier(.7, 0, .45, 1), background .4s cubic-bezier(.7, 0, .45, 1), backdrop-filter .4s cubic-bezier(.7, 0, .45, 1);
    color: var(--primary_color);
 }
 
 #colors_section input {
    color: var(--primary_color) !important;
-   text-align: center;
 }
 
- #colors_section:hover {
+#colors_section:hover {
    background: rgba(0, 0, 0, .35);
    backdrop-filter: blur(.5rem);
    width: 16rem;
@@ -484,8 +354,6 @@ h1 {
    height: 100%;
    width: 2rem;
    position: absolute;
-   display: flex;
-   align-items: center;
    opacity: 1;
    z-index: 0;
    transition: opacity .1s cubic-bezier(.7, 0, .45, 1) .2s, transform .5s cubic-bezier(.7, 0, .45, 1);
@@ -517,18 +385,13 @@ h1 {
 
 #colors_center {
    z-index: 1;
-   display: flex;
-   align-items: center;
-   flex-direction: column;
 }
 
 #gradients_wrapper {
    width: calc(var(--gradient_size) + 1.5rem);
    height: calc(var(--gradient_size) + 1.5rem);
-   display: flex;
    cursor: crosshair;
-   justify-content: center;
-   align-items: center;
+   position: relative;
 }
 
 #gradients {
@@ -578,8 +441,6 @@ h1 {
 
 #leds {
    display: none;
-   flex-direction: column;
-   align-items: center;
    padding: 2rem;
    background: var(--offwhite_color);
 }
@@ -623,8 +484,7 @@ code {
    overflow: hidden;
    width: 25rem;
    height: 10rem;
-   position: absolute;
-   border-radius: var(--radius);
+   position: relative;
 }
 
 #code_final {
@@ -645,10 +505,6 @@ code {
    width: 100%;
    height: 100%;
    backdrop-filter: blur(.35rem);
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
    transition: opacity .2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -660,10 +516,6 @@ code {
    padding: .1rem .3rem;
    color: #fff;
    background: var(--code_color);
-}
-
-#copy_code_background button:first-of-type {
-   margin-bottom: .85rem;
 }
 
 .minimize_cb:checked ~ #copy_code_background {
@@ -693,7 +545,6 @@ code {
 }
 
 .cross_rotate {
-   /* background: url(../images/x.svg); */
    background: url(../images/x.svg);
    background-size: contain;
    width: inherit;
@@ -779,23 +630,6 @@ code {
    box-shadow: inset 0 0 0 .2rem var(--offwhite_color), inset 0 0 0 1000rem #000;
 }
 
-#top {
-   width: 100%;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-}
-
-#settings_wrapper {
-   display: flex;
-   flex-direction: row;
-}
-
-#next_to_settings {
-   margin-left: calc(.275rem /* box shadow of settings */ + .2rem);
-   background: #ddd;
-}
-
 .warning {
    position: fixed;
    height: auto;
@@ -818,7 +652,7 @@ code {
 
 header {
    display: flex;
-   justify-content: center;
+   justify-content: space-evenly;
    align-items: center;
    background: linear-gradient(190deg,rgb(150, 0, 255), rgb(255, 0, 160));
    height: 5.5rem;
@@ -844,40 +678,6 @@ header a {
    font-family: 'jetbrains mono';
 }
 
-#leds > span {
-   margin-bottom: 1rem;
-}
-
-#leds span button {
-   padding: .1rem .3rem;
-   color: #fff;
-}
-
-#leds span button:not(#regen_code) {
-   background: rgb(255, 0, 160);
-}
-
-#regen_code {
-   background: linear-gradient(90deg, rgb(150, 0, 255) 49.75%, rgb(255, 0, 160) 49.75999%);
-   background-size: 200% 200%;
-   background-position: 100% 0%;
-   animation: anim_regen_code 2.5s cubic-bezier(.61,.77,.15,.7) infinite paused forwards;
-}
-
-@keyframes anim_regen_code {
-   0% {
-      background-position: 100% 0%;
-   }
-
-   0.01% {
-      background-position: 100% 100%;
-   }
-
-   95% {
-      background-position: 0% 0%;
-   }
-}
-
 select {
    background: var(--offwhite_color);
    color: #000 !important;
@@ -894,18 +694,15 @@ footer {
    color: var(--primary_color);
 }
 
-footer label {
-   display: flex;
-}
-
 footer a {
    font-family: 'jetbrains mono', monospace;
    font-size: 1.05rem;
-   margin-left: .35rem;
    font-weight: 300;
-   display: flex;
-   align-items: center;
    color: rgb(255, 0, 160);
+}
+
+footer >:last-child a {
+   margin-left: .25rem;
 }
 
 footer div {
@@ -957,12 +754,13 @@ footer div {
 }
 
 .custom_input {
-   background: none;
+   background: rgba(0, 0, 0, 0);
    width: 100%;
    height: calc(100% - .1rem);
    outline: none !important;
    caret-color: #fff;
-   box-shadow: 0px .1rem .025rem -.025rem #999;
+   box-shadow: 0px .1rem .025rem -.025rem #fff;
+   text-align: center;
 }
 
 .custom_input_underline {
@@ -981,10 +779,32 @@ footer div {
    transition: width .3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+#led_input_box > div > div > input {
+   color: var(--primary_color);
+   width: 6rem;
+}
+
+.cont {
+   display: flex;
+}
+
+.c {
+   flex-direction: column;
+}
+
+.center {
+   justify-content: center;
+   align-items: center;
+}
+
+.no_outline {
+   outline: none !important;
+}
+
 noscript {
    width: 100%;
    height: 100%;
-   z-index: 5000;
+   z-index: 4999;
    background: #000;
    position: fixed;
    display: flex;
@@ -1003,4 +823,130 @@ noscript a:active {
 
 noscript p {
    color: #fff;
+}
+
+.toggle_switch input {
+   display: none;
+}
+
+.toggle_switch {
+   display: inline-block;
+   width: 48px;
+   height: 24px;
+   border: 3px solid rgba(0, 0, 0, 0);
+   position: relative;
+}
+
+.toggle_switch_inner {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   box-shadow: 0 0 0 2px #1d1d1d;
+   border: 4px solid rgba(0, 0, 0, 0);
+   border-radius: 100rem;
+   overflow: hidden;
+   transition: box-shadow .22s cubic-bezier(.7, 0, .45, 1);
+   cursor: pointer;
+}
+
+.toggle_switch_inner::before {
+   content: '';
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   background: #1d1d1d;
+   border-radius: 100rem;
+   transition: transform .22s cubic-bezier(.7, 0, .45, 1), background .22s cubic-bezier(.7, 0, .45, 1);
+   transform: translate(-1rem, 0);
+}
+
+.toggle_switch > input:checked + .toggle_switch_inner::before {
+   transform: translate(1rem, 0);
+   background: #fff;
+}
+
+.toggle_switch > input:checked + .toggle_switch_inner {
+   box-shadow: 0 0 0 2px #fff;
+}
+
+.icon {
+   background-size: cover !important;
+   width: 100%;
+   height: 100%;
+}
+
+.brush_icon {
+   background: url(../images/icons8-paint-50.png);
+}
+
+.eraser_icon {
+   background: url(../images/icons8-eraser-60.png);
+}
+
+#leds > div > div >:nth-child(2) > label {
+   width: 1.9rem;
+   height: 1.9rem;
+   padding: .35rem;
+}
+
+#leds > div > div >:nth-child(2) > input {
+   display: none;
+}
+
+#leds > div > div >:nth-child(2) > label:hover {
+   box-shadow: rgba(0, 0, 0, .2) 0 0 .1rem 10000rem inset;
+   cursor: pointer;
+}
+
+#leds > div > div >:nth-child(2) >:nth-child(1) {
+   outline: 2px solid rgb(255, 0, 160);
+}
+
+#leds > div {
+   margin-bottom: 1rem;
+}
+
+#leds span button, #leds span label {
+   padding: .1rem .3rem;
+   color: #fff;
+}
+
+#leds span button, #leds span label {
+   background: rgb(255, 0, 160);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+
+input[type=number] {
+   -moz-appearance: textfield;
+}
+
+.change_color_button {
+   display: none;
+}
+
+a:hover {
+   text-decoration: none;
+}
+
+.even {
+   justify-content: space-evenly;
+}
+
+.max {
+   width: 100%;
+}
+
+#save_ino_file {
+   margin-bottom: .5rem;
+}
+
+.debug_hide {
+   display: none;
 }

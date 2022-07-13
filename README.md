@@ -1,11 +1,11 @@
 # fasterLED
 quickly generate code for the FastLED Arduino library
 
-even though the code generation is working, some features such as saving settings to cookies (i got JSON working :3).
+everything working except the semi-functional color picker. basically, the whole "gradient selector" is working, but if you input a color as hex, the gradient selector goes bananas and selects some random value.
 app tested on firefox nightly and chromium.
 
 this tool is still in development.
-i am currently working on a better UI.
+i am currently working on the colorpicker and animating :)
 
-project completed in about 65%.
+project completed in about 75%.
 i will be more than happy to accept pr's with improvements and bug fixes

@@ -148,8 +148,10 @@ function selector_pos(update) {
    bottom_setter = constrain(gradient_rect_reverse_y / gradient_rect_divisor, -100, 0);
    top_setter = constrain(gradient_rect_y / gradient_rect_divisor, 0, 100);
    
-   selector.style.left = `${rem_px_conv((left_setter * gradient_rect_divisor), true, false)}rem`;
-   selector.style.top = `${rem_px_conv((top_setter * gradient_rect_divisor), true, false)}rem`;
+   // selector.style.left = `${rem_px_conv((left_setter * gradient_rect_divisor), true, false)}rem`;
+   selector.style.left = `${left_setter * gradient_rect_divisor}px`
+   // selector.style.top = `${rem_px_conv((top_setter * gradient_rect_divisor), true, false)}rem`;
+   selector.style.top = `${top_setter * gradient_rect_divisor}px`
 
    actual_s = left_setter;
    actual_v = Math.abs(bottom_setter);
@@ -166,12 +168,14 @@ function set_selector_pos(x, y) {
    selector.style.top = `${rem_px_conv(y * gradient_rect_divisor, true, false)}rem`;
    actual_s = left_setter;
    actual_v = Math.abs(bottom_setter);
+   selector.style.left = `${left_setter * gradient_rect_divisor}px`
+   selector.style.top = `${top_setter * gradient_rect_divisor}px`
    update_color_values();
 }
 
-h_slider.addEventListener('input', () => {
-   update_color_values();
-});
+h_slider.addEventListener('input', update_color_values);
+
+h_slider.addEventListener('input', change_gradient_based_on_slider);
 
 function update_color_values() {
    hsv_input[1].value = Math.round(actual_s);
@@ -201,6 +205,19 @@ function get_current_cp_val() {
       out
    }
 }
+
+hex_input.addEventListener('change', () => {
+   const htr = hex_to_rgb(format_hex(hex_input.value, false)),
+         rth = rgb_to_hsv(htr.r, htr.g, htr.b);
+   rgb_input[0].value = htr.r;
+   rgb_input[1].value = htr.g;
+   rgb_input[2].value = htr.b;
+   for (let n = 0; n < rgb_input.length; n++) {
+      rgb_input[n].style.width = `${get_input_width(rgb_input[n].value, 3)}ch`;
+   }
+   h_slider.value = rth.h;
+   set_selector_pos(rth.s, rth.v);
+});
 
 // hex_input.addEventListener('change', () => {
 //    let formatted;
@@ -256,7 +273,7 @@ function format_hex(str, arrayify) {
    if (contains_hex_nums(_str) !== _str.length || contains_hex_nums === null || contains_hex_nums(_str) === undefined) return;
    _str = _str.toLowerCase();
    console.log(_str)
-   let arr = [];
+   const arr = [];
    if (_str.length === 3) {
       _str = _str.split('').map(a => a + a).join('');
       console.log(_str)
@@ -264,15 +281,17 @@ function format_hex(str, arrayify) {
    if (arrayify) {
       arr = _str.match(/.{1,2}/g);
       return arr;
-   } else return `#${_str}`;
+   }
+   return _str;
 }
 
-h_slider.addEventListener('input', change_gradient_based_on_slider);
 
 function change_gradient_based_on_slider() {
    gradient_color.style.background = `hsl(${h_slider.value}, 100%, 50%) none repeat scroll 0% 0%`;
    gradients_border.style.background = get_current_cp_val().out;
+   hsv_input[0].value = Math.round(h_slider.value);
 }
+change_gradient_based_on_slider();
 
 for (let n = 0; n < rgb_input.length; n++) {
    rgb_input[n].addEventListener('input', () => {

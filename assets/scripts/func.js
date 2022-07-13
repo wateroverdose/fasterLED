@@ -42,7 +42,7 @@ function rem_px_conv(value, type, postfix_present) {
 function set_cookie(id, val) {
    let _date = new Date();
    _date.setTime(_date.getTime() + 31556926); // ? store cookie for 1 year
-   document.cookie = `${id}=${val}exipers=${_date.toUTCString()}`;
+   document.cookie += `${id}=${val}; `;
 }
 
 function get_cookie(id) {

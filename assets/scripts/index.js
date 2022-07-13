@@ -5,9 +5,7 @@ let selected_layout_type = 0,
     code_final = ds('#code_final');
 
 const layout_type_radio = ds_a('input[name="layout_type"]'),
-      led_number_a = ds('#led_number_a'),
-      led_number_b = ds('#led_number_b'),
-      led_number_input = ds('.led_number_input'),
+      num_input = ds_a('.led_number_input'),
       led_input_box = ds('#led_input_box'),
       led_container = ds('#led_container'),
       brightness_level_slider = ds('#brightness_level_slider'),
@@ -20,6 +18,7 @@ const layout_type_radio = ds_a('input[name="layout_type"]'),
       leds = ds('#leds'),
       led_chipset = ds('#led_chipset'),
       question_wrapper = ds_a('.question_wrapper'),
+      bg_worker = new Worker('worker.js'),
       app = [led_color_array = [], settings = []];
 
 const random_str = random_string(8);
@@ -35,13 +34,14 @@ ds('#copy_contents').addEventListener('click', () => {
 })
 
 let include_clock_pin = false;
+const settings_1 = ds('.settings_page:nth-of-type(1)'),
+      settings_2 = ds('.settings_page:nth-of-type(2)');
 function hide_clock_pin_input(ch_wid) {
    const cps = ds('#clock_pin_selection');
-   if (led_chipset.value === 'APA102' || led_chipset.value === 'WS2801' || led_chipset.value === 'LPD8806' || led_chipset.value === 'P9813' || led_chipset.value === 'SM16716') 
-   {
+   if (led_chipset.value === 'APA102' || led_chipset.value === 'WS2801' || led_chipset.value === 'LPD8806' || led_chipset.value === 'P9813' || led_chipset.value === 'SM16716') {
       if (ch_wid) {
          if (include_clock_pin !== true) {
-            ds('.settings_page:nth-of-type(2)').style.width = `calc(${get_style(ds('.settings_page:nth-of-type(2)'), 'width')} + 4rem)`;
+            settings_2.style.width = `calc(${get_style(settings_2, 'width')} + 4rem)`;
          }
       }
       include_clock_pin = true;
@@ -49,13 +49,13 @@ function hide_clock_pin_input(ch_wid) {
    } else {
       if (ch_wid) {
          if (include_clock_pin) {
-            ds('.settings_page:nth-of-type(2)').style.width = `calc(${get_style(ds('.settings_page:nth-of-type(2)'), 'width')} - 4rem)`;
+            settings_2.style.width = `calc(${get_style(settings_2, 'width')} - 4rem)`;
          }
       }
       include_clock_pin = false;
       cps.style.display = 'none';
    };
-   ds('.settings_page:nth-of-type(1)').style.width = get_style(ds('.settings_page:nth-of-type(2)'), 'width');
+   settings_1.style.width = get_style(settings_2, 'width');
 }
 ds('#led_chipset').addEventListener('change', hide_clock_pin_input.bind(null, true));
 hide_clock_pin_input(false);
@@ -66,13 +66,26 @@ function load_json_conf(input) {
    text.readAsText(input.files[0])
    text.addEventListener('load', () => {
       console.log(text.result);
-      let json = JSON.parse(text.result);
-      console.log(json);
-      for (let n = 0; n < json.length; n++) {
-         for (let m = 0; m < json[n].length; m++) {
-            app[n][m] = json[n][m];
+      let _json = JSON.parse(text.result);
+      console.log(_json);
+      for (let n = 0; n < _json.length; n++) {
+         for (let m = 0; m < _json[n].length; m++) {
+            app[n][m] = _json[n][m];
          }
       }
+      data_pin.value = settings[2];
+      clock_pin.value = settings[3];
+      brightness_level.value = settings[4];
+      led_chipset.value = settings[5];
+      order[0].value = settings[6].substring(0, 1);
+      order[1].value = settings[6].substring(1, 2);
+      order[2].value = settings[6].substring(2, 3);
+
+      blsv = settings[4];
+      update_blsv();
+      brightness_level.value = settings[4];
+      brightness_level_slider.value = settings[4];
+
       submit_number();
       write_led_boxes(true);
       for (let n = 0; n < app[0].length; n++) {
@@ -138,39 +151,21 @@ function random_string(len) {
 }
 
 ds('#save_as_json').addEventListener('click', () => {
+   save_settings();
    dl_json(ds('#save_as_json'), `fasterLED_${random_str}.json`, app);
 });
 
-let code_gen_count = 0;
-function make_code_gen_unavailable(seconds) {
-   let interval;
-   if (code_gen_count === 0) {
-      console.log('start the engines!!! 😎😎');
-      regen_code.style.animationPlayState = 'running';
-      interval = setInterval(update, seconds * 1000);
-      code_gen_count++;
-   }
-   function update() {
-      regen_code.style.animationPlayState = 'paused';
-      console.log(`${seconds} seconds passed! removing the interval`);
-      code_gen_count = 0;
-      clearInterval(interval);
-   }
-}
-
 regen_code.addEventListener('click', () => {
    save_settings();
-   console.table(led_color_array);
-   generate_code(led_count, settings[4], settings[2], led_color_array, settings[5]);
-   make_code_gen_unavailable(get_style(regen_code, 'animation-duration', false, false).substring(0, 3));
+   generate_code(led_count, settings[4], settings[2], led_color_array, settings[5], settings[6], settings[3]);
 });
 
-led_number_a.addEventListener('input', () => {
-   if (selected_layout_type) led_number_b.value = led_number_a.value;
+num_input[0].addEventListener('input', () => {
+   if (selected_layout_type) num_input[1].value = num_input[0].value;
 });
 
-led_number_b.addEventListener('input', () => {
-   if (selected_layout_type) led_number_a.value = led_number_b.value;
+num_input[1].addEventListener('input', () => {
+   if (selected_layout_type) num_input[0].value = num_input[1].value;
 });
 
 function layout_type_check(n) {
@@ -188,26 +183,25 @@ for (let n = 0; n < layout_type_radio.length; n++) {
 function update_led_inputs_based_on_layout_type() {
    switch (selected_layout_type) {
       case 0:
-         led_number_a.value = '1';
-         led_number_b.value = '80';
-         led_number_b.select();
+         num_input[0].value = '1';
+         num_input[1].value = '80';
+         num_input[1].select();
          break;
       case 1:
-         led_number_a.value = '8';
-         led_number_b.value = '8';
-         led_number_b.select();
+         num_input[0].value = '8';
+         num_input[1].value = '8';
+         num_input[1].select();
          break;
       case 2:
-         led_number_a.value = '16';
-         led_number_b.value = '8';
-         led_number_a.select();
+         num_input[0].value = '16';
+         num_input[1].value = '8';
+         num_input[0].select();
          break;
       default:
          selected_layout_type = 2;
          update_led_inputs_based_on_layout_type();
          break;
    }
-   console.log(`${led_number_a.value}, ${led_number_b.value}`);
 }
 
 //? change grid size accordingly to entered number \/
@@ -218,13 +212,15 @@ function change_grid_size() {
 
 submit_button.addEventListener('click', start);
 
+const order = ds_a('.rgb_order');
 function save_settings() {
-   settings[0] = led_number_a.value;
-   settings[1] = led_number_b.value;
+   settings[0] = num_input[0].value;
+   settings[1] = num_input[1].value;
    settings[2] = data_pin.value;
    settings[3] = clock_pin.value;
    settings[4] = brightness_level.value;
    settings[5] = led_chipset.value;
+   settings[6] = `${order[0].value}${order[1].value}${order[2].value}`;
 }
 
 function start() {
@@ -242,8 +238,8 @@ function submit_number() {
 
    led_input_box.style.display = 'none';
    leds.style.display = 'flex';
-   ds('.settings_page:nth-of-type(2)').style.borderRadius = 'calc(var(--radius) * 2)';
-   ds('.settings_page:nth-of-type(1)').style.display = 'none';
+   settings_2.style.borderRadius = 'calc(var(--radius) * 2)';
+   settings_1.style.display = 'none';
    
    let led_box_width = get_style(led_box[0], 'width', true, false),
        led_box_border = get_style(led_box[0], 'border-width', true, false),
@@ -255,7 +251,6 @@ function submit_number() {
 }
 
 function write_led_boxes(json) {
-   let brush_smme = false;
    let lmb_held_on_leds = false;
    led_container.addEventListener('mousedown', () => {lmb_held_on_leds = true;});
    led_container.addEventListener('mouseup', () => {lmb_held_on_leds = false;});
@@ -268,28 +263,20 @@ function write_led_boxes(json) {
    led_box_wrapper = ds_a('.led_box_wrapper');
 
    for (let n = 0; n < led_box.length; n++) {
-      led_box_wrapper[n].addEventListener('mouseenter', () => {
-         if (lmb_held_on_leds && brush_smme) {
-            brush_smme = false;
-            brush(n);
-         }
-      });
-      led_box_wrapper[n].addEventListener('mousemove', () => {
-         if (brush_smme === false && lmb_held_on_leds) {
-            brush_smme = true;
-            brush(n);
-         };
-      });
-      led_box_wrapper[n].addEventListener('click', () => {
-         brush(n);
-      });
+      led_box_wrapper[n].addEventListener('mouseenter', () => {if (lmb_held_on_leds) brush(n)});
+      led_box_wrapper[n].addEventListener('mousedown', brush.bind(null, n));
    }
 
    function brush(n) {
-      led_box[n].style.background = hex_input.value;
-      led_color_array[n] = `0x${hex_input.value.substring(1, 7)}`;
-      const cfi = hex_to_rgb(hex_input.value.substring(1, 7));
-      led_box[n].style.color = get_bg_color(cfi.r, cfi.g, cfi.b);
+      if (brush_enabled) {
+         update_box(n, hex_input.value)
+         const cfi = hex_to_rgb(hex_input.value.substring(1, 7));
+         led_box[n].style.color = get_bg_color(cfi.r, cfi.g, cfi.b);
+      } else {
+         update_box(n, '#000000');
+         led_box[n].style.color = '#fff';
+      }
+
    }
 
    led_container_wrapper.addEventListener('mouseleave', () => {
@@ -300,7 +287,7 @@ function write_led_boxes(json) {
    change_grid_size();
 
    //? push basic color
-   if (json !== true) {
+   if (!json) {
       Array.from(led_container.children).forEach(() => {
          led_color_array.push(`0x000000`);
       });
@@ -310,19 +297,22 @@ function write_led_boxes(json) {
       }
    }
 
-   generate_code(led_count, settings[4], settings[2], led_color_array, settings[5]);
+   generate_code(led_count, settings[4], settings[2], led_color_array, settings[5], settings[6], settings[3]);
+   on_resize();
 }
 
 function generate_code(led_amount, brightness, pin, arr, led_type, rgb_order, clock_pin) {
    let err = '';
-   if (brightness === undefined) brightness = 255;
+   if (brightness === undefined || !isNaN(brightness)) brightness = 255;
    if (pin === undefined) err += 'data pin is undefined\n';
    if (led_amount === undefined) err += 'amount of LED\'s is undefined\n';
    if (arr === undefined) err += 'LED array is undefined\n';
-   if (led_type === undefined) err += 'LED chipset is undefined\n';
+   if (led_type === undefined) err += 'LED chipset is undefined';
    if (rgb_order === undefined) rgb_order = 'RGB';
 
    if (err !== '') {throw err}
+   console.log('starting the engines 😎😎');
+   console.table(led_color_array);
 
    code_final.textContent = '';
    code_final.textContent += 
@@ -330,11 +320,18 @@ function generate_code(led_amount, brightness, pin, arr, led_type, rgb_order, cl
 `#include <FastLED.h>
 
 #define LED_AMOUNT ${led_amount}
-#define DATA_PIN ${pin}
-#define CLOCK_PIN ${clock_pin}
+#define DATA_PIN ${pin}`;
+
+   if (include_clock_pin) code_final.textContent += 
+`
+#define CLOCK_PIN ${clock_pin}`;
+
+   code_final.textContent +=
+`
 #define LED_CHIPSET ${led_type}
 #define RGB_ORDER ${rgb_order}
-#define brightness_level ${brightness}
+
+int brightness_level = ${brightness};
 
 CRGB leds[LED_AMOUNT] = {${arr.join(', ')}};
 
@@ -350,36 +347,30 @@ void loop() {}`;
 
 function update_box(box, color) {
    led_box[box].style.background = color;
+   led_color_array[box] = `0x${color.substring(1, 7)}`;
 }
 
 // ? brightness level slider value
-let blsv;
+let blsv = brightness_level_slider.value;
 function update_blsv() {
-   blsv = brightness_level_slider.value;
-   ds(':root').style.setProperty("--brightness_level_slider_color", `rgb(${blsv}, ${blsv}, ${blsv})`);
-   brightness_level.value = Number(brightness_level_slider.value);
+   ds(':root').style.setProperty("--brightness_level_slider_color", `rgb(${Math.round(blsv * 2.55)}, ${Math.round(blsv * 2.55)}, ${Math.round(blsv * 2.55)})`);
 }
-brightness_level_slider.addEventListener('input', update_blsv);
+brightness_level_slider.addEventListener('input', () => {
+   blsv = Number(brightness_level_slider.value);
+   update_blsv();
+   brightness_level.value = Number(blsv);
+});
+
+brightness_level.addEventListener('input', () => {
+   blsv = Number(brightness_level.value);
+   update_blsv();
+   brightness_level_slider.value = brightness_level.value;
+});
 update_blsv();
 
 data_pin.addEventListener('input', () => {
    data_pin.style.width = `calc(${get_input_width(data_pin.value, 2)}ch + 2ch)`;
 });
-
-//? limit inputs to 64
-function limit_inputs(x) {
-   this.value = this.value.replace(/[^0-9]+/g, '').replace(/(\..*?)\..*/g, '$1');
-   if (this.value <= 0) {
-      this.value = '';
-   }
-   if (this.value.length > String(x).length) {
-      this.value = String(x);
-   }
-}
-
-for (let n = 0; n < led_number_input.length; n++) {
-   led_number_input[n].addEventListener('input', limit_inputs, 64);
-}
 
 ds('#change_all_colors').addEventListener('click', () => {
    const x = hex_to_rgb(hex_input.value.substring(1, 7));
@@ -390,13 +381,6 @@ ds('#change_all_colors').addEventListener('click', () => {
 });
 
 update_led_inputs_based_on_layout_type();
-
-let all_inputs = ds_a('input:not(input[type="checkbox"]):not(input[type="radius"]:not(input[type="radio"])');
-for (let n = 0; n < all_inputs.length; n++) {
-   all_inputs[n].addEventListener('click', () => {
-      all_inputs[n].select();
-   });
-}
 
 let color_change_btns = ds_a('.change_color_button');
 for (let n = 0; n < color_change_btns.length; n++) {
@@ -420,10 +404,28 @@ function get_bg_color(r, g, b) {
    return (((r * 0.299) + (g * 0.587) + (b * 0.114)) > 150) ? '#000' : '#fff';
 }
 
+let is_dark = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? true : false;
+
+let _ts = ds_a('[name="tool_select"]'), brush_enabled = true;
+function check_ts() {
+   if (_ts[3].checked) {
+      _ts[2].style.outline = '2px solid rgb(255, 0, 160)';
+      _ts[0].style.outline = 'none';
+      brush_enabled = false;
+   } else {
+      _ts[0].style.outline = '2px solid rgb(255, 0, 160)';
+      _ts[2].style.outline = 'none';
+      brush_enabled = true;
+   }
+}
+for (let n = 0; n < _ts.length; n++) {
+   _ts[n].addEventListener('click', check_ts);
+}
 
 function on_resize() {
-   ds('.settings_page:nth-of-type(2)').style.width = get_style(ds('.settings_page:nth-of-type(1)'), 'width');
+   settings_2.style.width = get_style(settings_1, 'width');
    for (let n = 0; n < question_wrapper.length; n++) qm_box[n] = question_wrapper[n].getBoundingClientRect();
 }
+
 window.addEventListener('resize', on_resize);
 on_resize();
